@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify #pip install flask
 from flask_cors import CORS #pip install flask-cors
-from transcribe import transcribe_audio
+from transcribe import transcribe_audio, generate_summary
 
 app = Flask(__name__)
-CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
+CORS(app)
+#CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -18,6 +19,21 @@ def upload_file():
             return jsonify({'transcription': transcription}), 200
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+
+@app.route('/summarize', methods=['POST'])
+def summarize_text():
+    data = request.get_json()  # Get data sent from the frontend
+    text_to_summarize = data.get('text', '')
+    
+    # Ensure there's text to summarize
+    if not text_to_summarize:
+        return jsonify({'error': 'No text provided'}), 400
+
+    summary = generate_summary(text_to_summarize)
+    if summary:
+        return jsonify({'summary': summary}), 200
+    else:
+        return jsonify({'error': 'Failed to generate summary'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
