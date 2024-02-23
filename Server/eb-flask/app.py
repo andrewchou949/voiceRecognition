@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify #pip install flask
 from flask_cors import CORS #pip install flask-cors
 from transcribe import transcribe_audio, generate_summary
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)
 #CORS(app, resources={r"/upload": {"origins": "http://localhost:3000"}})
+
+@app.route('/')
+def hello():
+    return "Hello, World"
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -36,9 +42,10 @@ def summarize_text():
         return jsonify({'error': 'Failed to generate summary'}), 500
 
 # For debug mode
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    # app.debug = True
+    app.run(port=int(os.environ.get("PORT", 8080)),host='0.0.0.0',debug=True)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(debug=False, host="0.0.0.0", port=port)
+# if __name__ == "__main__":
+#     port = int(os.environ.get("PORT", 8080))
+#     app.run(debug=False, host="0.0.0.0", port=port)
