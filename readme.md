@@ -1,7 +1,5 @@
 # Voice Recognition / Summary
 
-## The site is at: [https://vrfrontend.web.app/](https://vrfrontend.web.app/)
-
 ## Table of Contents
 - [Features](#features)
 - [Client Side (Frontend)](#client-side-frontend)
